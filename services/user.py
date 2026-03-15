@@ -8,17 +8,15 @@ def create_user(username: str, password: str, **kwargs) -> models.Model:
     )
 
 
-def get_user(user_id: int = None, username: str = None) -> models.Model:
-    if user_id is None and username is None:
+def get_user(user_id: int) -> models.Model:
+    if user_id is None:
         raise ValueError("Either user_id or username must be provided")
     user_model = get_user_model()
-    if user_id is not None:
-        return user_model.objects.get(id=user_id)
-    return user_model.objects.get(username=username)
+    return user_model.objects.get(id=user_id)
 
 
 def update_user(
-    user_id: int = None,
+    user_id: int,
     username: str = None,
     password: str = None,
     **kwargs,
