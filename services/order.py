@@ -14,17 +14,17 @@ def create_order(tickets: list[dict], username: str, date: str = None) -> None:
         order_data["created_at"] = date
 
     order = Order.objects.create(**order_data)
-
-    for ticket_item in tickets:
+    tickets_to_create = []
+    for item in tickets:
         ticket = Ticket(
             order=order,
-            movie_session_id=ticket_item["movie_session"],
-            row=ticket_item["row"],
-            seat=ticket_item["seat"],
+            movie_session_id=item["movie_session"],
+            row=item["row"],
+            seat=item["seat"],
         )
-
         ticket.full_clean()
-        ticket.save()
+        tickets_to_create.append(ticket)
+    Ticket.objects.bulk_create(tickets_to_create)
 
 
 def get_orders(username: str = None) -> QuerySet[Order]:
